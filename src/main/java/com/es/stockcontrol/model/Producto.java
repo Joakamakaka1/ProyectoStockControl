@@ -24,7 +24,7 @@ public class Producto {
     @Column(name = "fecha_alta", nullable = false)
     private Date fechaAlta;
 
-    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "id-proveedor")
     private Proveedor proveedor;
 
