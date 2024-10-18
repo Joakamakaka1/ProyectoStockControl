@@ -7,7 +7,6 @@ import jakarta.persistence.*;
 public class User {
 
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private String nombre_usuario;
     @Column (name = "nombre", length = 20, nullable = false)
     private String password;

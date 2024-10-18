@@ -9,7 +9,6 @@ import java.util.Date;
 public class Producto {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @Column(name = "categoria", nullable = false, length = 10)

@@ -7,6 +7,9 @@ import com.es.stockcontrol.model.Producto;
 import com.es.stockcontrol.model.Proveedor;
 import com.es.stockcontrol.model.RespuestaHTTP;
 import com.es.stockcontrol.model.User;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 
 import java.util.List;
 import java.util.Scanner;
@@ -16,6 +19,8 @@ public class AppStockControl {
 
     public static void main(String[] args) {
 
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("PSC");
+        EntityManager em = emf.createEntityManager();
         /*
         Declaro aquí variables que voy a usar durante la ejecución del main
          */
