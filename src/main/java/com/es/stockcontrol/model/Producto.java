@@ -1,10 +1,11 @@
 package com.es.stockcontrol.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.Cascade;
 
 import java.util.Date;
 
+@Entity
+@Table(name = "producto")
 public class Producto {
 
     @Id
@@ -25,7 +26,7 @@ public class Producto {
     private Date fechaAlta;
 
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    @JoinColumn(name = "id-proveedor")
+    @JoinColumn(name = "id_proveedor")
     private Proveedor proveedor;
 
     public Producto() {

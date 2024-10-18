@@ -15,9 +15,8 @@ public class Proveedor {
     private String nombre;
     @Column (name = "direccion", nullable = false)
     private String direccion;
-    @OneToMany(mappedBy = "id_proveedor")
-    List<Producto> productos; //Relacion de <OneToMany>
-
+    @OneToMany(mappedBy = "proveedor", fetch = FetchType.LAZY)
+    List<Producto> productos;
 
     public Proveedor() {
     }
