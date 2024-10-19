@@ -3,11 +3,17 @@ package com.es.stockcontrol.controller.impl;
 import com.es.stockcontrol.controller.api.ProductoControllerAPI;
 import com.es.stockcontrol.model.Producto;
 import com.es.stockcontrol.model.RespuestaHTTP;
+import com.es.stockcontrol.service.ProductoService;
 
 import java.util.List;
 
 public class ProductoController implements ProductoControllerAPI {
 
+    private ProductoService productoService;
+
+    public ProductoController(ProductoService productoService) {
+        this.productoService = productoService;
+    }
 
     @Override
     public RespuestaHTTP<Producto> altaProducto(String idProducto, String nombreProducto, String precioSinIva, String descripcionProducto, String nombreProveedor, String direccionProveedor) {
