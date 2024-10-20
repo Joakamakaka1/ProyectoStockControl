@@ -45,12 +45,3 @@ La capa de servicio debe aplicar las reglas de negocio, como generar el ID del p
 ### 4. Validaciones y Cálculos
 
 La capa de servicio también puede validar los datos antes de interactuar con el repositorio. Por ejemplo, se puede validar que los campos obligatorios no sean nulos o que el nombre y la categoría cumplan con las restricciones de longitud.
-
-## Conclusion
-
-- **Interacción con el repositorio**: La capa de servicio se encarga de delegar las operaciones de persistencia al repositorio.
-- **Lógica de negocio**: Aplica las reglas de negocio (por ejemplo, generación de ID, cálculo del precio con IVA).
-- **Validaciones**: Se realizan en la capa de servicio antes de interactuar con la base de datos.
-- **Métodos CRUD**: Cada operación CRUD se implementa en la capa de servicio, asegurando que se aplique la lógica de negocio en cada operación.
-
-Este `.md` detalla cómo implementar la capa de servicio con todas las consideraciones necesarias para la gestión de reglas de negocio y validaciones, manteniendo una estructura limpia y organizada.
