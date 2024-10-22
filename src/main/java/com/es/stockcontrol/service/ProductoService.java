@@ -15,27 +15,30 @@ public class ProductoService {
         this.productoRepository = productoRepository;
     }
 
-    public Producto agregarProducto(String idProducto, String nombreProducto, String precioSinIvaStr, String descripcionProducto, String nombreProveedor, String direccionProveedor) {
-        if (precioSinIvaStr == null || precioSinIvaStr.isEmpty()) {
+    public Producto agregarProducto(String categoria, String nombre, String precioSinIvaStr, String precioConIvaStr, Proveedor proveedor) {
+        if (categoria == null || categoria.length() < 3 || categoria.length() > 50) {
             return null;
         }
 
-        Float precioSinIva;
-        precioSinIva = Float.parseFloat(precioSinIvaStr);
+        if (nombre == null || nombre.length() < 3 || nombre.length() > 50) {
+            return null;
+        }
 
-        Float precioConIva = calcularPrecioConIva(precioSinIva);
+        Float precioSinIva = Float.parseFloat(precioSinIvaStr);
+        Float precioConIva;
 
-        Proveedor proveedor = new Proveedor();
-        proveedor.setNombre(nombreProveedor);
-        proveedor.setDireccion(direccionProveedor);
+        if (precioConIvaStr == null || precioConIvaStr.isEmpty()) {
+            precioConIva = calcularPrecioConIva(precioSinIva);
+        } else {
+            precioConIva = Float.parseFloat(precioConIvaStr);
+        }
 
-        String id = generarId(idProducto, nombreProducto, proveedor);
+        String id = generarId(categoria, nombre, proveedor);
 
         Producto nuevoProducto = new Producto();
         nuevoProducto.setId(id);
-        nuevoProducto.setCategoria(idProducto);
-        nuevoProducto.setNombre(nombreProducto);
-        nuevoProducto.setDescripcion(descripcionProducto);
+        nuevoProducto.setCategoria(categoria);
+        nuevoProducto.setNombre(nombre);
         nuevoProducto.setPrecioSinIva(precioSinIva);
         nuevoProducto.setPrecioConIva(precioConIva);
         nuevoProducto.setFechaAlta(new Date());
@@ -89,7 +92,7 @@ public class ProductoService {
         }
 
         if (precioSinIvaStr != null && !precioSinIvaStr.isEmpty()) {
-            Float precioSinIva = Float.parseFloat(precioSinIvaStr); 
+            Float precioSinIva = Float.parseFloat(precioSinIvaStr);
             producto.setPrecioSinIva(precioSinIva);
             producto.setPrecioConIva(calcularPrecioConIva(precioSinIva));
         }
