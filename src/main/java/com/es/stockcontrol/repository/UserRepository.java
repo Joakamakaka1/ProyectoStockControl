@@ -33,12 +33,28 @@ public class UserRepository implements BaseRepository<User, String> {
 
     @Override
     public void actualizar(User user) {
-
+    EntityTransaction tx = entityManager.getTransaction();
+    tx.begin();
+    try{
+        entityManager.merge(user);
+        tx.commit();
+    }catch (Exception e){
+        tx.rollback();
+        throw e;
+    }
     }
 
     @Override
     public void eliminar(User user) {
-
+        EntityTransaction tx = entityManager.getTransaction();
+        tx.begin();
+        try {
+            entityManager.remove(user);
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
