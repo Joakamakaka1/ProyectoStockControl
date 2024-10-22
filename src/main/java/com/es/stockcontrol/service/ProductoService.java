@@ -15,39 +15,41 @@ public class ProductoService {
         this.productoRepository = productoRepository;
     }
 
-    public Producto agregarProducto(String categoria, String nombre, String precioSinIvaStr, String precioConIvaStr, Proveedor proveedor) {
-        if (categoria == null || categoria.length() < 3 || categoria.length() > 50) {
+    public Producto agregarProducto(String idProducto, String nombreProducto, String precioSinIvaStr, String descripcionProducto, String nombreProveedor, String direccionProveedor) {
+        if (precioSinIvaStr == null || precioSinIvaStr.isEmpty()) {
             return null;
         }
 
-        if (nombre == null || nombre.length() < 3 || nombre.length() > 50) {
+        Float precioSinIva;
+        try {
+            precioSinIva = Float.parseFloat(precioSinIvaStr);
+        } catch (NumberFormatException e) {
             return null;
         }
 
-        Float precioSinIva = Float.parseFloat(precioSinIvaStr);
-        Float precioConIva;
+        Float precioConIva = calcularPrecioConIva(precioSinIva);
 
-        if (precioConIvaStr == null || precioConIvaStr.isEmpty()) {
-            precioConIva = calcularPrecioConIva(precioSinIva);
-        } else {
-            precioConIva = Float.parseFloat(precioConIvaStr);
-        }
+        Proveedor proveedor = new Proveedor();
+        proveedor.setNombre(nombreProveedor);
+        proveedor.setDireccion(direccionProveedor);
 
-        String id = generarId(categoria, nombre, proveedor);
+        String id = generarId(idProducto, nombreProducto, proveedor);
 
         Producto nuevoProducto = new Producto();
         nuevoProducto.setId(id);
-        nuevoProducto.setCategoria(categoria);
-        nuevoProducto.setNombre(nombre);
+        nuevoProducto.setCategoria(idProducto);
+        nuevoProducto.setNombre(nombreProducto);
+        nuevoProducto.setDescripcion(descripcionProducto);
         nuevoProducto.setPrecioSinIva(precioSinIva);
         nuevoProducto.setPrecioConIva(precioConIva);
         nuevoProducto.setFechaAlta(new Date());
         nuevoProducto.setProveedor(proveedor);
-
+        
         productoRepository.guardar(nuevoProducto);
 
         return nuevoProducto;
     }
+
 
 
     // Generamos la ID del producto ya que no tiene la anotacion para hacerlo en este caso
