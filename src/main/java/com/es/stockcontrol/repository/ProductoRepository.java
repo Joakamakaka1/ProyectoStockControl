@@ -16,12 +16,20 @@ public class ProductoRepository implements BaseRepository<Producto, String> {
 
     @Override
     public void guardar(Producto producto) { // POST
-
+        EntityTransaction tx = entityManager.getTransaction();//Crea la transacción
+        tx.begin();//Inicia la transacción
+        try {
+            entityManager.persist(producto);//Guarda el objeto en la base de datos
+            tx.commit();//Confirma la transacción
+        } catch (Exception e) {
+            tx.rollback();//Deshace la transacción
+            throw e;
+        }
     }
 
     @Override
     public Producto buscarPorId(String s) { // GET by id
-        return null;
+        return entityManager.find(Producto.class, s);
     }
 
     @Override

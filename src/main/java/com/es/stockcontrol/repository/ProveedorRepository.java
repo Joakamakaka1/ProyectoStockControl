@@ -8,11 +8,12 @@ import java.util.List;
 
 public class ProveedorRepository implements BaseRepository<Proveedor, Long> {
 
-    private EntityManager entityManager;
+    private EntityManager entityManager;//entitymanager se encarga de administrar los datos del modelo
 
     public ProveedorRepository(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
+
     @Override
     public void guardar(Proveedor proveedor) { // POST
         EntityTransaction tx = entityManager.getTransaction();
@@ -33,11 +34,28 @@ public class ProveedorRepository implements BaseRepository<Proveedor, Long> {
 
     @Override
     public void actualizar(Proveedor proveedor) { // UPDATE
-
+        EntityTransaction tx = entityManager.getTransaction();
+        tx.begin();
+        try {
+            entityManager.merge(proveedor);
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            throw e;
+        }
     }
 
     @Override
     public void eliminar(Proveedor proveedor) { // DELETE
+        EntityTransaction tx =  entityManager.getTransaction();
+        tx.begin();
+        try{
+            entityManager.remove(proveedor);
+            tx.commit();
+        }catch (Exception e){
+            tx.rollback();
+            throw e;
+        }
 
     }
 
