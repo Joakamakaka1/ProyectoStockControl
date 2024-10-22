@@ -31,7 +31,6 @@ public class ProveedorService {
 
     public Proveedor GetProveedor(Long id) {
         return proveedorRepository.buscarPorId(id);
-
     }
 
 
@@ -62,6 +61,4 @@ public class ProveedorService {
             proveedorRepository.eliminar(proveedor);
         }
     }
-
-
 }
