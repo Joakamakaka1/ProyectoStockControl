@@ -29,6 +29,12 @@ public class ProveedorService {
         return proveedor;
     }
 
+    public Proveedor GetProveedor(Long id) {
+        return proveedorRepository.buscarPorId(id);
+
+    }
+
+
     public Proveedor actualizarProveedor(Long id, String nombre, String direccion) {
         Proveedor proveedor = proveedorRepository.buscarPorId(id);
         if (proveedor==null) {
