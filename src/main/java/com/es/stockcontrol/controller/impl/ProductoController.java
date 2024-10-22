@@ -17,11 +17,21 @@ public class ProductoController implements ProductoControllerAPI {
 
     @Override
     public RespuestaHTTP<Producto> altaProducto(String idProducto, String nombreProducto, String precioSinIva, String descripcionProducto, String nombreProveedor, String direccionProveedor) {
+        try{
+
+            // Validar la ID del producto
+
+        } catch (Exception e) {
+            return new RespuestaHTTP(500, "Error interno en el servidor", null);
+        }
+
+        productoService.agregarProducto(idProducto, nombreProducto, Float.parseFloat(precioSinIva), null, nombreProveedor);
         return null;
     }
 
     @Override
     public RespuestaHTTP<Producto> bajaProducto(String id) {
+
         return null;
     }
 
