@@ -7,10 +7,8 @@ import java.util.Date;
 @Entity
 @Table(name = "producto")
 public class Producto {
-
     @Id
     private String id;
-
     @Column(name = "categoria", nullable = false, length = 10)
     private String categoria;
     @Column(name = "nombre", nullable = false, length = 50)

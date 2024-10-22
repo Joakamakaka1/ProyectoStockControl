@@ -2,7 +2,6 @@ package com.es.stockcontrol.controller.impl;
 
 import com.es.stockcontrol.controller.api.ProductoControllerAPI;
 import com.es.stockcontrol.model.Producto;
-import com.es.stockcontrol.model.Proveedor;
 import com.es.stockcontrol.model.RespuestaHTTP;
 import com.es.stockcontrol.service.ProductoService;
 
@@ -20,18 +19,19 @@ public class ProductoController implements ProductoControllerAPI {
     @Override
     public RespuestaHTTP<Producto> altaProducto(String idProducto, String nombreProducto, String precioSinIva, String descripcionProducto, String nombreProveedor, String direccionProveedor) {
         try {
-            if (idProducto.equals(productoService.getProducto(idProducto).getId())) {
-                return new RespuestaHTTP<Producto>(409, "El producto ya existe", null);
+            if (productoService.getProducto(idProducto) != null) {
+                return new RespuestaHTTP<>(409, "El producto ya existe", null);
             }
-            if (productoService.agregarProducto(idProducto, nombreProducto, precioSinIva, descripcionProducto, nombreProveedor, direccionProveedor) == null) {
-                return new RespuestaHTTP<Producto>(400, "Error al insertar el producto", null);
-            }
-            return new RespuestaHTTP<Producto>(201, "Producto creado", null);
+
+            Producto productoCreado = productoService.agregarProducto(idProducto, nombreProducto, precioSinIva, descripcionProducto, nombreProveedor, direccionProveedor, "CategoriaGenerica", 0.21f);
+
+            return (productoCreado != null) ?
+                    new RespuestaHTTP<>(201, "Producto creado exitosamente", productoCreado) :
+                    new RespuestaHTTP<>(400, "Error al crear el producto", null);
         } catch (Exception e) {
-            return new RespuestaHTTP<Producto>(500, "Error interno en el servidor", null);
+            return new RespuestaHTTP<>(500, "Error interno en el servidor", null);
         }
     }
-
 
     @Override
     public RespuestaHTTP<Producto> bajaProducto(String id) {
@@ -39,7 +39,7 @@ public class ProductoController implements ProductoControllerAPI {
             if (productoService.getProducto(id) == null) {
                 return new RespuestaHTTP<Producto>(404, "El producto no existe", null);
             }
-            return productoService.eliminarProducto(id) ?
+            return productoService.bajaProducto(id) ?
                     new RespuestaHTTP<Producto>(200, "Producto eliminado", null) :
                     new RespuestaHTTP<Producto>(400, "Error interno en el servidor", null);
         } catch (Exception e) {

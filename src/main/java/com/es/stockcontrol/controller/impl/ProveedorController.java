@@ -14,13 +14,28 @@ public class ProveedorController implements ProveedorControllerAPI {
     public ProveedorController(ProveedorService proveedorService) {
         this.proveedorService = proveedorService;
     }
+
     @Override
-    public RespuestaHTTP<List<Proveedor>> getProveedoresProducto(String idProducto) {
-        return null;
+    public RespuestaHTTP<List<Proveedor>> getProveedoresProducto(Long idProducto) {
+        try {
+            if (proveedorService.getProveedor(idProducto) == null) {
+                return new RespuestaHTTP<>(404, "El proveedor no existe", null);
+            }
+            return new RespuestaHTTP<>(200, "Proveedores encontrado", null);
+        } catch (Exception e) {
+            return new RespuestaHTTP<>(500, "Error interno en el servidor", null);
+        }
     }
 
     @Override
     public RespuestaHTTP<List<Proveedor>> getTodosProveedores() {
-        return null;
+        try {
+            if (proveedorService.getTodosProveedores() == null) {
+                return new RespuestaHTTP<>(404, "El proveedor no existe", null);
+            }
+            return new RespuestaHTTP<>(200, "Proveedores encontrado", null);
+        } catch (Exception e) {
+            return new RespuestaHTTP<>(500, "Error interno en el servidor", null);
+        }
     }
 }

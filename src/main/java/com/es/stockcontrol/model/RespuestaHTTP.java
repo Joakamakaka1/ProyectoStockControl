@@ -7,7 +7,6 @@ import java.util.Optional;
  * @param <T> : T puede ser un objeto de tipo User, o de tipo Producto, o ...
  */
 public class RespuestaHTTP<T> {
-
     private int codigo;
     private String mensaje;
     private T obj;

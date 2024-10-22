@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ProveedorRepository implements BaseRepository<Proveedor, Long> {
 
-    private EntityManager entityManager;//entitymanager se encarga de administrar los datos del modelo
+    private EntityManager entityManager;
 
     public ProveedorRepository(EntityManager entityManager) {
         this.entityManager = entityManager;
