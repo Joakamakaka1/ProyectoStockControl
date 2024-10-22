@@ -15,34 +15,37 @@ public class ProductoService {
         this.productoRepository = productoRepository;
     }
 
-    public Producto agregarProducto(String categoria, String nombre, Float precioSinIva, Float precioConIva, Proveedor proveedor) {
-        if (categoria == null || categoria.length() < 3 || categoria.length() > 50) {
-            return null;
-        }
-        if (nombre == null || nombre.length() < 3 || nombre.length() > 50) {
-            return null;
-        }
-        if (precioSinIva == null || precioConIva == null) {
+    public Producto agregarProducto(String idProducto, String nombreProducto, String precioSinIvaStr, String descripcionProducto, String nombreProveedor, String direccionProveedor) {
+        if (precioSinIvaStr == null || precioSinIvaStr.isEmpty()) {
             return null;
         }
 
-        String id = generarId(categoria, nombre, proveedor);
+        Float precioSinIva;
+        precioSinIva = Float.parseFloat(precioSinIvaStr);
 
-        if (precioConIva == null) {
-            precioConIva = calcularPrecioConIva(precioSinIva);
-        }
+        Float precioConIva = calcularPrecioConIva(precioSinIva);
+
+        Proveedor proveedor = new Proveedor();
+        proveedor.setNombre(nombreProveedor);
+        proveedor.setDireccion(direccionProveedor);
+
+        String id = generarId(idProducto, nombreProducto, proveedor);
 
         Producto nuevoProducto = new Producto();
         nuevoProducto.setId(id);
-        nuevoProducto.setCategoria(categoria);
-        nuevoProducto.setNombre(nombre);
+        nuevoProducto.setCategoria(idProducto);
+        nuevoProducto.setNombre(nombreProducto);
+        nuevoProducto.setDescripcion(descripcionProducto);
         nuevoProducto.setPrecioSinIva(precioSinIva);
         nuevoProducto.setPrecioConIva(precioConIva);
         nuevoProducto.setFechaAlta(new Date());
+        nuevoProducto.setProveedor(proveedor);
 
         productoRepository.guardar(nuevoProducto);
+
         return nuevoProducto;
     }
+
 
     // Generamos la ID del producto ya que no tiene la anotacion para hacerlo en este caso
     public String generarId(String categoria, String nombre, Proveedor proveedor) {
@@ -61,35 +64,48 @@ public class ProductoService {
         return productoRepository.buscarPorId(id);
     }
 
-    public Producto actualizarProducto(String id, String categoria, String nombre, Float precioSinIva, Float precioConIva, Proveedor proveedor) {
+    public Producto actualizarProducto(String id, String categoria, String nombre, String precioSinIvaStr, String nombreProveedor, String direccionProveedor) {
         Producto producto = productoRepository.buscarPorId(id);
         if (producto == null) {
             return null;
         }
+
         if (categoria != null && !categoria.isEmpty()) {
             producto.setCategoria(categoria);
         }
+
         if (nombre != null && !nombre.isEmpty()) {
             producto.setNombre(nombre);
         }
-        if (proveedor != null) {
+
+        if (nombreProveedor != null && direccionProveedor != null) {
+            Proveedor proveedor = producto.getProveedor();
+            if (proveedor == null) {
+                proveedor = new Proveedor();
+            }
+            proveedor.setNombre(nombreProveedor);
+            proveedor.setDireccion(direccionProveedor);
             producto.setProveedor(proveedor);
         }
-        if (precioSinIva != null) {
+
+        if (precioSinIvaStr != null && !precioSinIvaStr.isEmpty()) {
+            Float precioSinIva = Float.parseFloat(precioSinIvaStr); 
             producto.setPrecioSinIva(precioSinIva);
+            producto.setPrecioConIva(calcularPrecioConIva(precioSinIva));
         }
-        if (precioConIva != null) {
-            producto.setPrecioConIva(precioConIva);
-        }
+
         productoRepository.actualizar(producto);
+
         return producto;
     }
 
-    public void eliminarProducto(String id) {
+
+    public boolean eliminarProducto(String id) {
         Producto producto = productoRepository.buscarPorId(id);
         if (producto == null) {
-            return;
+            return false;
         }
         productoRepository.eliminar(producto);
+        return true;
     }
 }
