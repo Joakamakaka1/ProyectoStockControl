@@ -49,12 +49,31 @@ public class ProductoController implements ProductoControllerAPI {
 
     @Override
     public RespuestaHTTP<Producto> modificarNombreProducto(String id, String nuevoNombre) {
-        return null;
+        try{
+            if (productoService.modificarNombreProducto(id, nuevoNombre) == null) {
+                return new RespuestaHTTP<Producto>(404, "El producto no existe", null);
+            }
+            return productoService.modificarNombreProducto(id, nuevoNombre) ?
+                    new RespuestaHTTP<Producto>(200, "Producto modificado", null) :
+                    new RespuestaHTTP<Producto>(400, "Error interno en el servidor", null);
+        }catch (Exception e) {
+            return new RespuestaHTTP<Producto>(500, "Error interno en el servidor", null);
+        }
+
     }
 
     @Override
-    public RespuestaHTTP<Producto> modificarStockProducto(String id, String nuevoStock) {
-        return null;
+    public RespuestaHTTP<Producto> modificarStockProducto(String id, int nuevoStock) {
+        try{
+            if (productoService.modificarStockProducto(id, nuevoStock) == null) {
+                return new RespuestaHTTP<Producto>(404, "El producto no existe", null);
+            }
+            return productoService.modificarStockProducto(id, nuevoStock) ?
+                    new RespuestaHTTP<Producto>(200, "Producto modificado", null) :
+                    new RespuestaHTTP<Producto>(400, "Error interno en el servidor", null);
+        }catch (Exception e) {
+            return new RespuestaHTTP<Producto>(500, "Error interno en el servidor", null);
+        }
     }
 
     @Override
@@ -71,11 +90,26 @@ public class ProductoController implements ProductoControllerAPI {
 
     @Override
     public RespuestaHTTP<List<Producto>> getProductosConStock() {
-        return null;
+        try {
+            if (productoService.getProductosConStock() == null) {
+                return new RespuestaHTTP<List<Producto>>(404, "El producto no existe", null);
+            }
+            return new RespuestaHTTP<List<Producto>>(200, "Producto encontrado", null);
+
+        }catch (Exception e) {
+            return new RespuestaHTTP<List<Producto>>(500, "Error interno en el servidor", null);
+        }
     }
 
     @Override
     public RespuestaHTTP<List<Producto>> getProductosSinStock() {
-        return null;
+        try {
+            if (productoService.getProductosSinStock() == null) {
+                return new RespuestaHTTP<List<Producto>>(404, "El producto no existe", null);
+            }
+            return new RespuestaHTTP<List<Producto>>(200, "Producto encontrado", null);
+        }catch (Exception e) {
+            return new RespuestaHTTP<List<Producto>>(500, "Error interno en el servidor", null);
+        }
     }
 }
