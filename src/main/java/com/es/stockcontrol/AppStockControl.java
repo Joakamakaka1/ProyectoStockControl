@@ -7,6 +7,11 @@ import com.es.stockcontrol.model.Producto;
 import com.es.stockcontrol.model.Proveedor;
 import com.es.stockcontrol.model.RespuestaHTTP;
 import com.es.stockcontrol.model.User;
+import com.es.stockcontrol.repository.ProductoRepository;
+import com.es.stockcontrol.repository.ProveedorRepository;
+import com.es.stockcontrol.repository.UserRepository;
+import com.es.stockcontrol.service.ProductoService;
+import com.es.stockcontrol.service.ProveedorService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -16,26 +21,28 @@ import java.util.Scanner;
 
 public class AppStockControl {
 
-
     public static void main(String[] args) {
 
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("PSC");
         EntityManager em = emf.createEntityManager();
-        /*
-        Declaro aquí variables que voy a usar durante la ejecución del main
-         */
+
+        UserRepository userRepository = new UserRepository(em);
+        ProductoRepository productoRepository = new ProductoRepository(em);
+        ProveedorRepository proveedorRepository = new ProveedorRepository(em);
+
+        ProductoService productoService = new ProductoService(em);
+        ProveedorService proveedorService = new ProveedorService(proveedorRepository);
+
+        UserController userController = new UserController(userRepository);
+        ProductoController productoController = new ProductoController(productoService);
+        ProveedorController proveedorController = new ProveedorController(proveedorService);
+
         Scanner scan = new Scanner(System.in);
-        boolean login = false;  // Variable para comprobar si se hace un login correcto o no
-        User user = new User(); // Variable para almacenar al usuario que se ha logado
+        boolean login = false;
+        User user = new User();
 
-        /*
-        1A PARTE. LOGIN
-
-        EN ESTA PARTE SE REALIZA UN LOGIN EN LA APLICACIÓN.
-        SE PIDE EL USUARIO Y CONTRASENIA Y SE LLAMA AL METODO login DE LA CLASE UserController
-         */
+        // Login
         do {
-            // Ni caso a este try/catch
             try {
                 Thread.sleep(500);
             } catch (Exception e) {
@@ -46,7 +53,6 @@ public class AppStockControl {
                     ******************************************************
                     ****    Bienvenid@ a StockControl               ******
                     ******************************************************
-                                    
                     Introduzca su usuario y contrasena para continuar (0 para salir)
                     """);
             System.out.print("user: ");
@@ -59,9 +65,7 @@ public class AppStockControl {
                 System.out.print("password: ");
                 String passwordInput = scan.nextLine();
 
-                UserController pController = new UserController();
-
-                RespuestaHTTP<User> respuestaHTTP = pController.login(userInput, passwordInput);
+                RespuestaHTTP<User> respuestaHTTP = userController.login(userInput, passwordInput);
 
                 try {
                     if (respuestaHTTP.getCodigo() == 200) {
@@ -81,30 +85,13 @@ public class AppStockControl {
             }
         } while (!login);
 
-
-        /*
-        2A PARTE. GESTION DE STOCK
-
-        EN ESTA PARTE SE REALIZA UN CRUD DE GESTION DE STOCK
-        1. Alta producto
-        2. Baja producto
-        3. Modificar nombre producto
-        4. Modificar stock producto
-        5. Get producto por id
-        6. Get productos con stock
-        7. Get productos sin stock
-        8. Get proveedores de un producto
-        9. Get todos los proveedores
-         */
+        // Gestión de stock
         String opc;
-
-        ProveedorController proveedorController = new ProveedorController();
         do {
             System.out.println("""
                     ******************************************************
                     ****            APP STOCK CONTROL               ******
                     ******************************************************
-                                    
                     1. Alta producto
                     2. Baja producto
                     3. Modificar nombre producto
@@ -122,31 +109,31 @@ public class AppStockControl {
             try {
                 switch (opc) {
                     case "1":
-                        altaProducto();
+                        altaProducto(productoController);
                         break;
                     case "2":
-                        bajaProducto();
+                        bajaProducto(productoController);
                         break;
                     case "3":
-                        modificarNombreProducto();
+                        modificarNombreProducto(productoController);
                         break;
                     case "4":
-                        modificarStockProducto();
+                        modificarStockProducto(productoController);
                         break;
                     case "5":
-                        getProductoPorId();
+                        getProductoPorId(productoController);
                         break;
                     case "6":
-                        getProductosConStock();
+                        getProductosConStock(productoController);
                         break;
                     case "7":
-                        getProductosSinStock();
+                        getProductosSinStock(productoController);
                         break;
                     case "8":
-                        getProveedoresDeUnProducto();
+                        getProveedoresDeUnProducto(proveedorController);
                         break;
                     case "9":
-                        getTodosLosProveedores();
+                        getTodosLosProveedores(proveedorController);
                         break;
                     case "0":
                         System.out.println("Saliendo...");
@@ -159,13 +146,10 @@ public class AppStockControl {
                 System.out.println("ERROR CONTROLADO");
             }
         } while (!opc.equals("0"));
-
     }
 
-    public static void altaProducto() {
+    public static void altaProducto(ProductoController productoController) {
         Scanner scan = new Scanner(System.in);
-        ProductoController productoController = new ProductoController();
-
         System.out.println("1. Alta producto");
 
         System.out.println("DETALLES PRODUCTO");
@@ -186,23 +170,20 @@ public class AppStockControl {
 
         RespuestaHTTP<Producto> respuesta = productoController.altaProducto(categoriaProducto, nombreProducto, precioSinIva, descripcionProducto, nombreProveedor, direccionProveedor);
 
-        if (respuesta != null && respuesta.getCodigo() == 200) {
+        if (respuesta != null && respuesta.getCodigo() == 201) {
             System.out.printf("PRODUCTO INSERTADO CORRECTAMENTE\n%s", respuesta.getObj().toString());
         } else {
             System.out.printf("Error en la operacion\n\t-codigo %d\n\t-%s\n", respuesta.getCodigo(), respuesta.getMensaje());
         }
-
-
     }
 
-    public static void bajaProducto() {
+    public static void bajaProducto(ProductoController productoController) {
         Scanner scan = new Scanner(System.in);
-        ProductoController productoController = new ProductoController();
         System.out.println("2. Baja producto");
 
         System.out.print("Introduzca el id del producto: ");
         String idProducto = scan.nextLine();
-        RespuestaHTTP<Producto> respuesta= productoController.bajaProducto(idProducto);
+        RespuestaHTTP<Producto> respuesta = productoController.bajaProducto(idProducto);
 
         if (respuesta != null && respuesta.getCodigo() == 200) {
             System.out.printf("OPERACION EXITOSA");
@@ -211,9 +192,8 @@ public class AppStockControl {
         }
     }
 
-    public static void modificarNombreProducto() {
+    public static void modificarNombreProducto(ProductoController productoController) {
         Scanner scan = new Scanner(System.in);
-        ProductoController productoController = new ProductoController();
         System.out.println("3. Modificar nombre producto");
         System.out.print("Introduzca el id del producto: ");
         String idProducto = scan.nextLine();
@@ -228,9 +208,8 @@ public class AppStockControl {
         }
     }
 
-    public static void modificarStockProducto() {
+    public static void modificarStockProducto(ProductoController productoController) {
         Scanner scan = new Scanner(System.in);
-        ProductoController productoController = new ProductoController();
         System.out.println("4. Modificar stock producto");
 
         System.out.print("Introduzca el id del producto: ");
@@ -246,10 +225,8 @@ public class AppStockControl {
         }
     }
 
-    public static void getProductoPorId() {
+    public static void getProductoPorId(ProductoController productoController) {
         Scanner scan = new Scanner(System.in);
-        ProductoController productoController = new ProductoController();
-
         System.out.println("5. Get producto por id");
 
         System.out.print("Introduzca el id del producto: ");
@@ -257,16 +234,13 @@ public class AppStockControl {
         RespuestaHTTP<Producto> respuesta = productoController.getProducto(idProducto);
 
         if (respuesta != null && respuesta.getCodigo() == 200) {
-            System.out.printf("OPERACION EXITOSA");
-            respuesta.getObj().toString();
+            System.out.printf("OPERACION EXITOSA\n%s", respuesta.getObj().toString());
         } else {
             System.out.printf("Error en la operacion\n\t-codigo %d\n\t-%s\n", respuesta.getCodigo(), respuesta.getMensaje());
         }
-
     }
 
-    public static void getProductosConStock() {
-        ProductoController productoController = new ProductoController();
+    public static void getProductosConStock(ProductoController productoController) {
         System.out.println("6. Get productos con stock");
 
         RespuestaHTTP<List<Producto>> respuesta = productoController.getProductosConStock();
@@ -274,68 +248,59 @@ public class AppStockControl {
         if (respuesta != null && respuesta.getCodigo() == 200) {
             System.out.printf("OPERACION EXITOSA");
             respuesta.getObj().forEach(producto -> {
-                producto.toString();
+                System.out.println(producto.toString());
             });
         } else {
             System.out.printf("Error en la operacion\n\t-codigo %d\n\t-%s\n", respuesta.getCodigo(), respuesta.getMensaje());
         }
-
     }
 
-    public static void getProductosSinStock() {
-        ProductoController productoController = new ProductoController();
+    public static void getProductosSinStock(ProductoController productoController) {
         System.out.println("7. Get productos sin stock");
-
 
         RespuestaHTTP<List<Producto>> respuesta = productoController.getProductosSinStock();
 
         if (respuesta != null && respuesta.getCodigo() == 200) {
             System.out.printf("OPERACION EXITOSA");
             respuesta.getObj().forEach(producto -> {
-                producto.toString();
+                System.out.println(producto.toString());
             });
         } else {
             System.out.printf("Error en la operacion\n\t-codigo %d\n\t-%s\n", respuesta.getCodigo(), respuesta.getMensaje());
         }
     }
 
-    public static void getProveedoresDeUnProducto() {
+    public static void getProveedoresDeUnProducto(ProveedorController proveedorController) {
         Scanner scan = new Scanner(System.in);
-        ProveedorController proveedorController = new ProveedorController();
         System.out.println("8. Get proveedores de un producto");
 
         System.out.print("Introduzca el id del producto: ");
         String idProducto = scan.nextLine();
-        RespuestaHTTP<List<Proveedor>> respuesta = proveedorController.getProveedoresProducto(idProducto);
+        Long idProductoLong = Long.parseLong(idProducto);
+        RespuestaHTTP<List<Proveedor>> respuesta = proveedorController.getProveedoresProducto(idProductoLong);
 
         if (respuesta != null && respuesta.getCodigo() == 200) {
             System.out.printf("OPERACION EXITOSA");
             respuesta.getObj().forEach(proveedor -> {
-                proveedor.toString();
+                System.out.println(proveedor.toString());
             });
         } else {
             System.out.printf("Error en la operacion\n\t-codigo %d\n\t-%s\n", respuesta.getCodigo(), respuesta.getMensaje());
         }
-
     }
 
-    public static void getTodosLosProveedores() {
-        ProveedorController proveedorController = new ProveedorController();
-
+    public static void getTodosLosProveedores(ProveedorController proveedorController) {
         System.out.println("9. Get todos los proveedores");
 
         RespuestaHTTP<List<Proveedor>> respuesta = proveedorController.getTodosProveedores();
 
         if (respuesta != null && respuesta.getCodigo() == 200) {
             System.out.printf("OPERACION EXITOSA");
-
             respuesta.getObj().forEach(proveedor -> {
-                proveedor.toString();
+                System.out.println(proveedor.toString());
             });
         } else {
             System.out.printf("Error en la operacion\n\t-codigo %d\n\t-%s\n", respuesta.getCodigo(), respuesta.getMensaje());
         }
     }
-
-
 }

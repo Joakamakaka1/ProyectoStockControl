@@ -68,13 +68,14 @@ public class ProductoService {
         return false;
     }
 
-    public Producto modificarNombreProducto(String id, String nuevoNombre) {
+    public boolean modificarNombreProducto(String id, String nuevoNombre) {
         Producto producto = productoRepository.buscarPorId(id);
         if (producto != null) {
             producto.setNombre(nuevoNombre);
             productoRepository.actualizar(producto);
+            return true;
         }
-        return producto;
+        return false;
     }
 
     public void modificarStockProducto(String id, int nuevoStock) {

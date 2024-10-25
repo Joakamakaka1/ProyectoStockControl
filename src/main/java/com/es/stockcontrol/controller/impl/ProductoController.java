@@ -8,13 +8,11 @@ import com.es.stockcontrol.service.ProductoService;
 import java.util.List;
 
 public class ProductoController implements ProductoControllerAPI {
-
     private ProductoService productoService;
 
     public ProductoController(ProductoService productoService) {
         this.productoService = productoService;
     }
-
 
     @Override
     public RespuestaHTTP<Producto> altaProducto(String idProducto, String nombreProducto, String precioSinIva, String descripcionProducto, String nombreProveedor, String direccionProveedor) {
@@ -49,30 +47,38 @@ public class ProductoController implements ProductoControllerAPI {
 
     @Override
     public RespuestaHTTP<Producto> modificarNombreProducto(String id, String nuevoNombre) {
-        try{
-            if (productoService.modificarNombreProducto(id, nuevoNombre) == null) {
-                return new RespuestaHTTP<Producto>(404, "El producto no existe", null);
+        try {
+            Producto producto = productoService.getProducto(id);
+            if (producto == null) {
+                return new RespuestaHTTP<>(404, "El producto no existe", null);
             }
-            return productoService.modificarNombreProducto(id, nuevoNombre) ?
-                    new RespuestaHTTP<Producto>(200, "Producto modificado", null) :
-                    new RespuestaHTTP<Producto>(400, "Error interno en el servidor", null);
-        }catch (Exception e) {
-            return new RespuestaHTTP<Producto>(500, "Error interno en el servidor", null);
-        }
 
+            boolean modificado = productoService.modificarNombreProducto(id, nuevoNombre);
+            return modificado ?
+                    new RespuestaHTTP<>(200, "Nombre del producto modificado", null) :
+                    new RespuestaHTTP<>(400, "Error al modificar el nombre del producto", null);
+        } catch (Exception e) {
+            return new RespuestaHTTP<>(500, "Error interno en el servidor", null);
+        }
     }
 
     @Override
-    public RespuestaHTTP<Producto> modificarStockProducto(String id, int nuevoStock) {
-        try{
-            if (productoService.modificarStockProducto(id, nuevoStock) == null) {
-                return new RespuestaHTTP<Producto>(404, "El producto no existe", null);
+    public RespuestaHTTP<Producto> modificarStockProducto(String id, String nuevoStock) {
+        try {
+            Producto producto = productoService.getProducto(id);
+            if (producto == null) {
+                return new RespuestaHTTP<>(404, "El producto no existe", null);
             }
-            return productoService.modificarStockProducto(id, nuevoStock) ?
-                    new RespuestaHTTP<Producto>(200, "Producto modificado", null) :
-                    new RespuestaHTTP<Producto>(400, "Error interno en el servidor", null);
-        }catch (Exception e) {
-            return new RespuestaHTTP<Producto>(500, "Error interno en el servidor", null);
+
+            if (nuevoStock == null || !nuevoStock.matches("\\d+")) {
+                return new RespuestaHTTP<>(400, "El stock debe ser un número entero válido", null);
+            }
+
+            int nuevoStockInt = Integer.parseInt(nuevoStock);
+            productoService.modificarStockProducto(id, nuevoStockInt);
+            return new RespuestaHTTP<>(200, "Stock del producto modificado", null);
+        } catch (Exception e) {
+            return new RespuestaHTTP<>(500, "Error interno en el servidor", null);
         }
     }
 
