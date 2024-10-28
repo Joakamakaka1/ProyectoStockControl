@@ -9,14 +9,28 @@ import jakarta.persistence.Query;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * The type Producto repository.
+ */
 public class ProductoRepository {
 
     private EntityManager entityManager; // entityManager se encarga de administrar los datos del modelo
 
+    /**
+     * Instantiates a new Producto repository.
+     *
+     * @param entityManager the entity manager
+     */
     public ProductoRepository(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
+    /**
+     * Guardar.
+     *
+     * @param proveedor the proveedor
+     * @param producto  the producto
+     */
     public void guardar(Proveedor proveedor, Producto producto) { // POST
         EntityTransaction tx = entityManager.getTransaction(); //Crea la transacción
         tx.begin(); //Inicia la transacción
@@ -31,11 +45,22 @@ public class ProductoRepository {
         }
     }
 
+    /**
+     * Buscar por id producto.
+     *
+     * @param id the id
+     * @return the producto
+     */
     public Producto buscarPorId(String id) { // GET by id
         //System.out.println("Buscando producto con ID: " + id);
         return entityManager.find(Producto.class, id);
     }
 
+    /**
+     * Actualizar.
+     *
+     * @param producto the producto
+     */
     public void actualizar(Producto producto) { // PUT
         EntityTransaction tx = entityManager.getTransaction();
         tx.begin();
@@ -48,6 +73,11 @@ public class ProductoRepository {
         }
     }
 
+    /**
+     * Eliminar.
+     *
+     * @param producto the producto
+     */
     public void eliminar(Producto producto) { // DELETE
         EntityTransaction tx = entityManager.getTransaction();
         tx.begin();
@@ -60,10 +90,20 @@ public class ProductoRepository {
         }
     }
 
+    /**
+     * Buscar todos list.
+     *
+     * @return the list
+     */
     public List<Producto> buscarTodos() { // GET all (optional)
         return entityManager.createQuery("SELECT p FROM Producto p", Producto.class).getResultList(); // Devuelve una lista de productos
     }
 
+    /**
+     * Gets productos sin stock.
+     *
+     * @return the productos sin stock
+     */
     public List<Producto> getProductosSinStock() {
         EntityTransaction tx = entityManager.getTransaction();
         tx.begin();
@@ -78,6 +118,11 @@ public class ProductoRepository {
         }
     }
 
+    /**
+     * Gets productos con stock.
+     *
+     * @return the productos con stock
+     */
     public List<Producto> getProductosConStock() {
         EntityTransaction tx = entityManager.getTransaction();
         tx.begin();
@@ -92,6 +137,12 @@ public class ProductoRepository {
         }
     }
 
+    /**
+     * Modificar stock.
+     *
+     * @param id    the id
+     * @param stock the stock
+     */
     public void modificarStock(String id, Integer stock) {
         EntityTransaction tx = entityManager.getTransaction();
         tx.begin();

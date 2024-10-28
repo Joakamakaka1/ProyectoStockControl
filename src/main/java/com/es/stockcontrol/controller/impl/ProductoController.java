@@ -7,9 +7,17 @@ import com.es.stockcontrol.service.ProductoService;
 
 import java.util.List;
 
+/**
+ * The type Producto controller.
+ */
 public class ProductoController implements ProductoControllerAPI {
     private ProductoService productoService;
 
+    /**
+     * Instantiates a new Producto controller.
+     *
+     * @param productoService the producto service
+     */
     public ProductoController(ProductoService productoService) {
         this.productoService = productoService;
     }

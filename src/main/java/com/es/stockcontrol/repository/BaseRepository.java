@@ -8,7 +8,7 @@ import java.util.List;
  * @param <T>  the type parameter
  * @param <ID> the type parameter
  */
-public interface BaseRepository<T, ID> {
+public interface BaseRepository<T, ID> { // NO SE ESTA USANDO
     /**
      * Guardar.
      *

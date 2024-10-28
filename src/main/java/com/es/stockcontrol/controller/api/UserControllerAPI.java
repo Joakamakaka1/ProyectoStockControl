@@ -3,14 +3,17 @@ package com.es.stockcontrol.controller.api;
 import com.es.stockcontrol.model.RespuestaHTTP;
 import com.es.stockcontrol.model.User;
 
+/**
+ * The interface User controller api.
+ */
 public interface UserControllerAPI {
 
     /**
-     * Método para realizar un login en la aplicacion.
+     * Login respuesta http.
      *
-     * @param userInput String. Parametro con el usuario introducido por teclado
-     * @param passInput String. Parametro con la pass introducida por teclado
-     * @return RespuestaHTTP<User>
+     * @param userInput the user input
+     * @param passInput the pass input
+     * @return the respuesta http
      */
     RespuestaHTTP<User> login(String userInput, String passInput);
 }

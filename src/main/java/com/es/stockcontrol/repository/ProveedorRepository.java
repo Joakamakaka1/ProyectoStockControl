@@ -9,14 +9,28 @@ import jakarta.persistence.EntityTransaction;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * The type Proveedor repository.
+ */
 public class ProveedorRepository {
 
     private EntityManager entityManager;
 
+    /**
+     * Instantiates a new Proveedor repository.
+     *
+     * @param entityManager the entity manager
+     */
     public ProveedorRepository(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
+    /**
+     * Gets proveedores producto.
+     *
+     * @param idProducto the id producto
+     * @return the proveedores producto
+     */
     public List<Proveedor> getProveedoresProducto(String idProducto) {
         EntityTransaction tx = entityManager.getTransaction();
         tx.begin();
@@ -36,6 +50,11 @@ public class ProveedorRepository {
         }
     }
 
+    /**
+     * Gets all proveedores.
+     *
+     * @return the all proveedores
+     */
     public List<Proveedor> getAllProveedores() {
         EntityTransaction tx = entityManager.getTransaction();
         tx.begin();

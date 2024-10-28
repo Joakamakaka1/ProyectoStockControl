@@ -7,10 +7,18 @@ import com.es.stockcontrol.service.ProveedorService;
 
 import java.util.List;
 
+/**
+ * The type Proveedor controller.
+ */
 public class ProveedorController implements ProveedorControllerAPI {
 
     private ProveedorService proveedorService;
 
+    /**
+     * Instantiates a new Proveedor controller.
+     *
+     * @param proveedorService the proveedor service
+     */
     public ProveedorController(ProveedorService proveedorService) {
         this.proveedorService = proveedorService;
     }

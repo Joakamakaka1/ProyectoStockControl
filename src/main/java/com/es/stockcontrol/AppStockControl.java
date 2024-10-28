@@ -19,8 +19,16 @@ import jakarta.persistence.Persistence;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * The type App stock control.
+ */
 public class AppStockControl {
 
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     */
     public static void main(String[] args) {
 
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("PSC");
@@ -148,6 +156,11 @@ public class AppStockControl {
         } while (!opc.equals("0"));
     }
 
+    /**
+     * Alta producto.
+     *
+     * @param productoController the producto controller
+     */
     public static void altaProducto(ProductoController productoController) {
         Scanner scan = new Scanner(System.in);
         System.out.println("1. Alta producto");
@@ -177,6 +190,11 @@ public class AppStockControl {
         }
     }
 
+    /**
+     * Baja producto.
+     *
+     * @param productoController the producto controller
+     */
     public static void bajaProducto(ProductoController productoController) {
         Scanner scan = new Scanner(System.in);
         System.out.println("2. Baja producto");
@@ -192,6 +210,11 @@ public class AppStockControl {
         }
     }
 
+    /**
+     * Modificar nombre producto.
+     *
+     * @param productoController the producto controller
+     */
     public static void modificarNombreProducto(ProductoController productoController) {
         Scanner scan = new Scanner(System.in);
         System.out.println("3. Modificar nombre producto");
@@ -208,6 +231,11 @@ public class AppStockControl {
         }
     }
 
+    /**
+     * Modificar stock producto.
+     *
+     * @param productoController the producto controller
+     */
     public static void modificarStockProducto(ProductoController productoController) {
         Scanner scan = new Scanner(System.in);
         System.out.println("4. Modificar stock producto");
@@ -225,6 +253,11 @@ public class AppStockControl {
         }
     }
 
+    /**
+     * Gets producto por id.
+     *
+     * @param productoController the producto controller
+     */
     public static void getProductoPorId(ProductoController productoController) {
         Scanner scan = new Scanner(System.in);
         System.out.println("5. Get producto por id");
@@ -240,6 +273,11 @@ public class AppStockControl {
         }
     }
 
+    /**
+     * Gets productos con stock.
+     *
+     * @param productoController the producto controller
+     */
     public static void getProductosConStock(ProductoController productoController) {
         System.out.println("6. Get productos con stock");
 
@@ -255,6 +293,11 @@ public class AppStockControl {
         }
     }
 
+    /**
+     * Gets productos sin stock.
+     *
+     * @param productoController the producto controller
+     */
     public static void getProductosSinStock(ProductoController productoController) {
         System.out.println("7. Get productos sin stock");
 
@@ -270,6 +313,11 @@ public class AppStockControl {
         }
     }
 
+    /**
+     * Gets proveedores de un producto.
+     *
+     * @param proveedorController the proveedor controller
+     */
     public static void getProveedoresDeUnProducto(ProveedorController proveedorController) {
         Scanner scan = new Scanner(System.in);
         System.out.println("8. Get proveedores de un producto");
@@ -288,6 +336,11 @@ public class AppStockControl {
         }
     }
 
+    /**
+     * Gets todos los proveedores.
+     *
+     * @param proveedorController the proveedor controller
+     */
     public static void getTodosLosProveedores(ProveedorController proveedorController) {
         System.out.println("9. Get todos los proveedores");
 

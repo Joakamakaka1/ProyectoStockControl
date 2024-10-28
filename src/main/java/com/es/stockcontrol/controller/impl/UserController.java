@@ -6,10 +6,18 @@ import com.es.stockcontrol.model.RespuestaHTTP;
 import com.es.stockcontrol.model.User;
 import com.es.stockcontrol.repository.UserRepository;
 
+/**
+ * The type User controller.
+ */
 public class UserController implements UserControllerAPI {
 
     private UserRepository UserRepository;
 
+    /**
+     * Instantiates a new User controller.
+     *
+     * @param UserRepository the user repository
+     */
     public UserController(UserRepository UserRepository) {
         this.UserRepository = UserRepository;
     }
