@@ -35,6 +35,10 @@ public class ProductoService {
             return null;
         }
 
+        if (nombreProveedor == null || nombreProveedor.isEmpty() || direccionProveedor == null || direccionProveedor.isEmpty()) {
+            return null;
+        }
+
         // Crear proveedor
         Proveedor proveedor = new Proveedor(nombreProveedor, direccionProveedor);
 
@@ -76,7 +80,12 @@ public class ProductoService {
     }
 
     public Producto getProducto(String id) {
-        return productoRepository.buscarPorId(id);
+        Producto producto = productoRepository.buscarPorId(id);
+        /*if (producto == null) {
+            //System.out.println("ERROR CONTROLADO: Producto no encontrado.");
+            return null;
+        }*/
+        return producto;
     }
 
     public List<Producto> getProductosConStock() {

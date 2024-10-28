@@ -93,12 +93,13 @@ public class ProductoController implements ProductoControllerAPI {
     @Override
     public RespuestaHTTP<Producto> getProducto(String id) {
         try {
-            if (productoService.getProducto(id) == null) {
-                return new RespuestaHTTP<Producto>(404, "El producto no existe", null);
+            Producto producto = productoService.getProducto(id);
+            if (producto == null) {
+                return new RespuestaHTTP<>(404, "El producto no existe", null);
             }
-            return new RespuestaHTTP<Producto>(200, "Producto encontrado", null);
+            return new RespuestaHTTP<>(200, "Producto encontrado", producto);
         } catch (Exception e) {
-            return new RespuestaHTTP<Producto>(500, "Error interno en el servidor", null);
+            return new RespuestaHTTP<>(500, "Error interno en el servidor", null);
         }
     }
 

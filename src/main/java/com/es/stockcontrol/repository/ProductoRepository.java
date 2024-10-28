@@ -24,23 +24,16 @@ public class ProductoRepository {
             entityManager.persist(producto); // Guarda el objeto en la base de datos
             entityManager.persist(proveedor);
             tx.commit(); //Confirma la transacción
+            //System.out.println("Producto insertado: " + producto);
         } catch (Exception e) {
             tx.rollback(); //Deshace la transacción
             throw e;
         }
     }
 
-    public Producto buscarPorId(String s) { // GET by id
-        EntityTransaction tx = entityManager.getTransaction();
-        tx.begin();
-        try {
-            Producto producto = entityManager.find(Producto.class, s);
-            tx.commit();
-            return producto;
-        } catch (Exception e) {
-            tx.rollback();
-            throw e;
-        }
+    public Producto buscarPorId(String id) { // GET by id
+        //System.out.println("Buscando producto con ID: " + id);
+        return entityManager.find(Producto.class, id);
     }
 
     public void actualizar(Producto producto) { // PUT
