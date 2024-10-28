@@ -125,7 +125,6 @@ public class Producto {
         sb.append(", precioConIva=").append(precioConIva);
         sb.append(", fechaAlta=").append(fechaAlta);
         sb.append(", stock=").append(stock);
-        // Incluimos solo el id del proveedor
         sb.append(", proveedorId=").append(proveedor != null ? proveedor.getId() : "N/A");
         sb.append('}');
         return sb.toString();

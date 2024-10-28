@@ -21,7 +21,7 @@ public class ProveedorController implements ProveedorControllerAPI {
             List<Proveedor> proveedores = proveedorService.getProveedoresProducto(idProducto);
 
             if (proveedores.isEmpty()) {
-                return new RespuestaHTTP<>(404, "No existen proveedores para este producto", proveedores); // Incluye la lista vacía
+                return new RespuestaHTTP<>(404, "No existen proveedores para este producto", proveedores);
             }
 
             return new RespuestaHTTP<>(200, "Proveedores encontrados", proveedores);

@@ -17,27 +17,24 @@ public class ProductoController implements ProductoControllerAPI {
     @Override
     public RespuestaHTTP<Producto> altaProducto(String idProducto, String nombreProducto, String precioSinIva, String descripcionProducto, String nombreProveedor, String direccionProveedor) {
         try {
-            System.out.println("Recibiendo solicitud para agregar producto: ID=" + idProducto + ", Nombre=" + nombreProducto);
+            //System.out.println("Recibiendo solicitud para agregar producto: ID=" + idProducto + ", Nombre=" + nombreProducto);
 
-            // Verificar si el producto ya existe
             if (productoService.getProducto(idProducto) != null) {
-                System.out.println("El producto ya existe: ID=" + idProducto);
+                //System.out.println("El producto ya existe: ID=" + idProducto);
                 return new RespuestaHTTP<>(409, "El producto ya existe", null);
             }
 
-            // Agregar producto
             Producto productoCreado = productoService.agregarProducto(idProducto, nombreProducto, precioSinIva, descripcionProducto, nombreProveedor, direccionProveedor, "CategoriaGenerica", 0.21f);
 
-            // Verificar resultado de la creación
             if (productoCreado != null) {
-                System.out.println("Producto creado exitosamente: " + productoCreado);
+                //System.out.println("Producto creado exitosamente: " + productoCreado);
                 return new RespuestaHTTP<>(201, "Producto creado exitosamente", productoCreado);
             } else {
-                System.out.println("Error al crear el producto. Producto devuelto es nulo.");
+                //System.out.println("Error al crear el producto. Producto devuelto es nulo.");
                 return new RespuestaHTTP<>(400, "Error al crear el producto", null);
             }
         } catch (Exception e) {
-            System.out.println("Error interno en el servidor: " + e.getMessage());
+            //System.out.println("Error interno en el servidor: " + e.getMessage());
             return new RespuestaHTTP<>(500, "Error interno en el servidor", null);
         }
     }
