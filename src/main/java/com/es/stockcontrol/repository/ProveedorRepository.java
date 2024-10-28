@@ -1,12 +1,15 @@
 package com.es.stockcontrol.repository;
 
+import com.es.stockcontrol.model.Producto;
 import com.es.stockcontrol.model.Proveedor;
+import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
+import java.util.Collections;
 import java.util.List;
 
-public class ProveedorRepository implements BaseRepository<Proveedor, Long> {
+public class ProveedorRepository {
 
     private EntityManager entityManager;
 
@@ -14,53 +17,36 @@ public class ProveedorRepository implements BaseRepository<Proveedor, Long> {
         this.entityManager = entityManager;
     }
 
-    @Override
-    public void guardar(Proveedor proveedor) { // POST
+    public List<Proveedor> getProveedoresProducto(String idProducto) {
         EntityTransaction tx = entityManager.getTransaction();
         tx.begin();
         try {
-            entityManager.persist(proveedor);
+            List<Proveedor> proveedores = entityManager.createQuery(
+                            "SELECT p.proveedor FROM Producto p WHERE p.id = :idProducto", Proveedor.class)
+                    .setParameter("idProducto", idProducto)
+                    .getResultList();
+
             tx.commit();
+            return proveedores;
+
         } catch (Exception e) {
             tx.rollback();
-            throw e;
+            System.out.println("Error al obtener proveedores de un producto: " + e.getMessage());
+            return Collections.emptyList();
         }
     }
 
-    @Override
-    public Proveedor buscarPorId(Long id) { // GET by id
-        return entityManager.find(Proveedor.class, id);
-    }
-
-    @Override
-    public void actualizar(Proveedor proveedor) { // UPDATE
+    public List<Proveedor> getAllProveedores() {
         EntityTransaction tx = entityManager.getTransaction();
         tx.begin();
         try {
-            entityManager.merge(proveedor);
+            List<Proveedor> proveedores = entityManager.createQuery("SELECT p FROM Proveedor p", Proveedor.class).getResultList();
             tx.commit();
+            return proveedores;
         } catch (Exception e) {
             tx.rollback();
-            throw e;
+            System.out.println("Error al obtener proveedores: " + e.getMessage());
+            return Collections.emptyList();
         }
-    }
-
-    @Override
-    public void eliminar(Proveedor proveedor) { // DELETE
-        EntityTransaction tx =  entityManager.getTransaction();
-        tx.begin();
-        try{
-            entityManager.remove(proveedor);
-            tx.commit();
-        }catch (Exception e){
-            tx.rollback();
-            throw e;
-        }
-
-    }
-
-    @Override
-    public List<Proveedor> buscarTodos() { // GET all (optional)
-        return entityManager.createQuery("SELECT p FROM Proveedor p", Proveedor.class).getResultList();
     }
 }

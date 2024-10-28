@@ -1,13 +1,15 @@
 package com.es.stockcontrol.repository;
 
 import com.es.stockcontrol.model.Producto;
+import com.es.stockcontrol.model.Proveedor;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
 
+import java.util.Collections;
 import java.util.List;
 
-public class ProductoRepository implements BaseRepository<Producto, String> {
+public class ProductoRepository {
 
     private EntityManager entityManager; // entityManager se encarga de administrar los datos del modelo
 
@@ -15,12 +17,12 @@ public class ProductoRepository implements BaseRepository<Producto, String> {
         this.entityManager = entityManager;
     }
 
-    @Override
-    public void guardar(Producto producto) { // POST
+    public void guardar(Proveedor proveedor, Producto producto) { // POST
         EntityTransaction tx = entityManager.getTransaction(); //Crea la transacción
         tx.begin(); //Inicia la transacción
         try {
             entityManager.persist(producto); // Guarda el objeto en la base de datos
+            entityManager.persist(proveedor);
             tx.commit(); //Confirma la transacción
         } catch (Exception e) {
             tx.rollback(); //Deshace la transacción
@@ -28,12 +30,19 @@ public class ProductoRepository implements BaseRepository<Producto, String> {
         }
     }
 
-    @Override
     public Producto buscarPorId(String s) { // GET by id
-        return entityManager.find(Producto.class, s);
+        EntityTransaction tx = entityManager.getTransaction();
+        tx.begin();
+        try {
+            Producto producto = entityManager.find(Producto.class, s);
+            tx.commit();
+            return producto;
+        } catch (Exception e) {
+            tx.rollback();
+            throw e;
+        }
     }
 
-    @Override
     public void actualizar(Producto producto) { // PUT
         EntityTransaction tx = entityManager.getTransaction();
         tx.begin();
@@ -46,7 +55,6 @@ public class ProductoRepository implements BaseRepository<Producto, String> {
         }
     }
 
-    @Override
     public void eliminar(Producto producto) { // DELETE
         EntityTransaction tx = entityManager.getTransaction();
         tx.begin();
@@ -59,7 +67,6 @@ public class ProductoRepository implements BaseRepository<Producto, String> {
         }
     }
 
-    @Override
     public List<Producto> buscarTodos() { // GET all (optional)
         return entityManager.createQuery("SELECT p FROM Producto p", Producto.class).getResultList(); // Devuelve una lista de productos
     }
@@ -68,11 +75,13 @@ public class ProductoRepository implements BaseRepository<Producto, String> {
         EntityTransaction tx = entityManager.getTransaction();
         tx.begin();
         try {
-            // Devuelve una lista de productos sin stock
-            return entityManager.createQuery("SELECT p FROM Producto p WHERE p.stock = 0", Producto.class).getResultList();
+            List<Producto> productos = entityManager.createQuery("SELECT p FROM Producto p WHERE p.stock = 0", Producto.class).getResultList();
+            tx.commit(); // Confirma la transacción
+            return productos;
         } catch (Exception e) {
-            tx.rollback();
-            throw e;
+            tx.rollback(); // Deshace la transacción
+            System.out.println("Error al obtener productos sin stock: " + e.getMessage());
+            return Collections.emptyList(); // Retorna una lista vacía en caso de error
         }
     }
 
@@ -80,15 +89,17 @@ public class ProductoRepository implements BaseRepository<Producto, String> {
         EntityTransaction tx = entityManager.getTransaction();
         tx.begin();
         try {
-            // Devuelve una lista de productos con stock
-            return entityManager.createQuery("SELECT p FROM Producto p WHERE p.stock > 0", Producto.class).getResultList();
+            List<Producto> productos = entityManager.createQuery("SELECT p FROM Producto p WHERE p.stock > 0", Producto.class).getResultList();
+            tx.commit();
+            return productos;
         } catch (Exception e) {
             tx.rollback();
-            throw e;
+            System.out.println("Error al obtener productos con stock: " + e.getMessage());
+            return Collections.emptyList();
         }
     }
 
-    public void modificarStock(String id, int stock) {
+    public void modificarStock(String id, Integer stock) {
         EntityTransaction tx = entityManager.getTransaction();
         tx.begin();
         try {

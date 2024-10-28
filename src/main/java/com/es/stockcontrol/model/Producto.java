@@ -9,7 +9,7 @@ import java.util.Date;
 public class Producto {
     @Id
     private String id;
-    @Column(name = "categoria", nullable = false, length = 10)
+    @Column(name = "categoria", nullable = false, length = 50)
     private String categoria;
     @Column(name = "nombre", nullable = false, length = 50)
     private String nombre;
@@ -22,7 +22,8 @@ public class Producto {
     @Temporal(TemporalType.DATE)
     @Column(name = "fecha_alta", nullable = false)
     private Date fechaAlta;
-
+    @Column(name = "stock", nullable = false)
+    private Integer stock;
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_proveedor")
     private Proveedor proveedor;
@@ -30,14 +31,14 @@ public class Producto {
     public Producto() {
     }
 
-    public Producto(String id, String categoria, String nombre, String descripcion, Float precioSinIva, Float precioConIva, Date fechaAlta, Proveedor proveedor) {
-        this.id = id;
+    public Producto(String categoria, String nombre, String descripcion, Float precioSinIva, Float precioConIva, Date fechaAlta, Proveedor proveedor) {
         this.categoria = categoria;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precioSinIva = precioSinIva;
         this.precioConIva = precioConIva;
         this.fechaAlta = fechaAlta;
+        this.stock = 0;
         this.proveedor = proveedor;
     }
 
@@ -103,5 +104,30 @@ public class Producto {
 
     public void setProveedor(Proveedor proveedor) {
         this.proveedor = proveedor;
+    }
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Producto{");
+        sb.append("id='").append(id).append('\'');
+        sb.append(", categoria='").append(categoria).append('\'');
+        sb.append(", nombre='").append(nombre).append('\'');
+        sb.append(", descripcion='").append(descripcion).append('\'');
+        sb.append(", precioSinIva=").append(precioSinIva);
+        sb.append(", precioConIva=").append(precioConIva);
+        sb.append(", fechaAlta=").append(fechaAlta);
+        sb.append(", stock=").append(stock);
+        // Incluimos solo el id del proveedor
+        sb.append(", proveedorId=").append(proveedor != null ? proveedor.getId() : "N/A");
+        sb.append('}');
+        return sb.toString();
     }
 }

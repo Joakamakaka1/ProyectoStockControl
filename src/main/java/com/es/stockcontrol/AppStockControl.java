@@ -30,7 +30,7 @@ public class AppStockControl {
         ProductoRepository productoRepository = new ProductoRepository(em);
         ProveedorRepository proveedorRepository = new ProveedorRepository(em);
 
-        ProductoService productoService = new ProductoService(em);
+        ProductoService productoService = new ProductoService(productoRepository);
         ProveedorService proveedorService = new ProveedorService(proveedorRepository);
 
         UserController userController = new UserController(userRepository);
@@ -276,8 +276,7 @@ public class AppStockControl {
 
         System.out.print("Introduzca el id del producto: ");
         String idProducto = scan.nextLine();
-        Long idProductoLong = Long.parseLong(idProducto);
-        RespuestaHTTP<List<Proveedor>> respuesta = proveedorController.getProveedoresProducto(idProductoLong);
+        RespuestaHTTP<List<Proveedor>> respuesta = proveedorController.getProveedoresProducto(idProducto);
 
         if (respuesta != null && respuesta.getCodigo() == 200) {
             System.out.printf("OPERACION EXITOSA");

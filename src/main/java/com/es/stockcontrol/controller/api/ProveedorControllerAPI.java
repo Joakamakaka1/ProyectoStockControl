@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface ProveedorControllerAPI {
 
-    RespuestaHTTP<List<Proveedor>> getProveedoresProducto(Long idProducto); // La ID debería de ser Long no String
+    RespuestaHTTP<List<Proveedor>> getProveedoresProducto(String idProducto); // La ID debería de ser Long no String
     RespuestaHTTP<List<Proveedor>> getTodosProveedores();
 }

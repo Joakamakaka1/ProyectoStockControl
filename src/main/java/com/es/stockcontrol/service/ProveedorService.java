@@ -13,11 +13,11 @@ public class ProveedorService {
         this.proveedorRepository = proveedorRepository;
     }
 
-    public Proveedor getProveedor(Long id) {
-        return proveedorRepository.buscarPorId(id);
+    public List<Proveedor> getProveedoresProducto(String id) {
+        return proveedorRepository.getProveedoresProducto(id);
     }
 
     public List<Proveedor> getTodosProveedores() {
-        return proveedorRepository.buscarTodos();
+        return proveedorRepository.getAllProveedores();
     }
 }

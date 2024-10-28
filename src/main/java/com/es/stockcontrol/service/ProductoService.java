@@ -13,10 +13,10 @@ import java.util.List;
 
 public class ProductoService {
 
-    private final ProductoRepository productoRepository;
+    private ProductoRepository productoRepository;
 
-    public ProductoService(EntityManager entityManager) {
-        this.productoRepository = new ProductoRepository(entityManager);
+    public ProductoService(ProductoRepository productoRepository) {
+        this.productoRepository = productoRepository;
     }
 
     public Producto agregarProducto(String idProducto, String nombreProducto, String precioSinIva, String descripcionProducto, String nombreProveedor, String direccionProveedor, String nombreCategoria, float ivaRate) {
@@ -36,26 +36,19 @@ public class ProductoService {
         }
 
         // Crear proveedor
-        Proveedor proveedor = new Proveedor();
-        proveedor.setNombre(nombreProveedor);
-        proveedor.setDireccion(direccionProveedor);
+        Proveedor proveedor = new Proveedor(nombreProveedor, direccionProveedor);
+
+        //Generar id
+        String idGenerado = generarId(nombreProducto, idProducto, nombreProveedor);
 
         // Crear producto
-        Producto producto = new Producto();
-        producto.setId(generarId(nombreCategoria, nombreProducto, nombreProveedor));
-        producto.setNombre(nombreProducto);
-        producto.setPrecioSinIva(precioSinIvaFloat);
-        producto.setDescripcion(descripcionProducto);
-        producto.setProveedor(proveedor);
-
-        // Calcular y establecer el precio con IVA
-        float precioConIva = precioSinIvaFloat + (precioSinIvaFloat * ivaRate);
-        producto.setPrecioConIva(precioConIva);
+        Producto producto = new Producto(nombreCategoria, nombreProducto, descripcionProducto, precioSinIvaFloat, (float) (precioSinIvaFloat * 1.21), Date.from(LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC)), proveedor);
+        producto.setId(idProducto);
 
         // Establecer la fecha de alta
         producto.setFechaAlta(Date.from(LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC)));
 
-        productoRepository.guardar(producto);
+        productoRepository.guardar(proveedor, producto);
         return producto;
     }
 

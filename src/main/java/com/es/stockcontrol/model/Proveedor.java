@@ -20,11 +20,9 @@ public class Proveedor {
     public Proveedor() {
     }
 
-    public Proveedor(Long id, String nombre, String direccion, List<Producto> productos) {
-        this.id = id;
+    public Proveedor(String nombre, String direccion) {
         this.nombre = nombre;
         this.direccion = direccion;
-        this.productos = productos;
     }
 
     public Long getId() {
@@ -57,5 +55,15 @@ public class Proveedor {
 
     public void setProductos(List<Producto> productos) {
         this.productos = productos;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Proveedor{");
+        sb.append("id=").append(id);
+        sb.append(", nombre='").append(nombre).append('\'');
+        sb.append(", direccion='").append(direccion).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }

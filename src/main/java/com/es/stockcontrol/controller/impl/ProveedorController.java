@@ -16,12 +16,16 @@ public class ProveedorController implements ProveedorControllerAPI {
     }
 
     @Override
-    public RespuestaHTTP<List<Proveedor>> getProveedoresProducto(Long idProducto) {
+    public RespuestaHTTP<List<Proveedor>> getProveedoresProducto(String idProducto) {
         try {
-            if (proveedorService.getProveedor(idProducto) == null) {
-                return new RespuestaHTTP<>(404, "El proveedor no existe", null);
+            List<Proveedor> proveedores = proveedorService.getProveedoresProducto(idProducto);
+
+            if (proveedores.isEmpty()) {
+                return new RespuestaHTTP<>(404, "No existen proveedores para este producto", proveedores); // Incluye la lista vacía
             }
-            return new RespuestaHTTP<>(200, "Proveedores encontrado", null);
+
+            return new RespuestaHTTP<>(200, "Proveedores encontrados", proveedores);
+
         } catch (Exception e) {
             return new RespuestaHTTP<>(500, "Error interno en el servidor", null);
         }
@@ -30,10 +34,11 @@ public class ProveedorController implements ProveedorControllerAPI {
     @Override
     public RespuestaHTTP<List<Proveedor>> getTodosProveedores() {
         try {
-            if (proveedorService.getTodosProveedores() == null) {
-                return new RespuestaHTTP<>(404, "El proveedor no existe", null);
+            List<Proveedor> proveedores = proveedorService.getTodosProveedores();
+            if (proveedores.isEmpty()) {
+                return new RespuestaHTTP<>(404, "No existen proveedores registrados", null);
             }
-            return new RespuestaHTTP<>(200, "Proveedores encontrado", null);
+            return new RespuestaHTTP<>(200, "Proveedores encontrados", proveedores);
         } catch (Exception e) {
             return new RespuestaHTTP<>(500, "Error interno en el servidor", null);
         }
